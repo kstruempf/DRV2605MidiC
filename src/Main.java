@@ -27,10 +27,6 @@ public class Main {
 
         var selectedFile = selectMidiFile(midiDirectory, inStream, outStream);
 
-        if (selectedFile == null) {
-            System.exit(1);
-        }
-
         outStream.printf("Selected file %s\n", selectedFile.getName());
     }
 

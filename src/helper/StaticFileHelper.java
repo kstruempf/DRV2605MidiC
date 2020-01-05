@@ -42,7 +42,8 @@ public class StaticFileHelper {
         var userInput = scanner.nextInt();
 
         if (userInput < 0 || userInput >= midiFiles.size()) {
-            return null;
+            outStream.println("Invalid input");
+            System.exit(1);
         }
 
         return midiFiles.get(userInput);
