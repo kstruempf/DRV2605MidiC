@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class StaticFileHelper {
+public class FileHelper {
 
     /**
      * Get's a collection of midi files in a specified directory.
@@ -29,7 +29,7 @@ public class StaticFileHelper {
 
     public static File selectMidiFile(File midiDirectory, InputStream inputStream, PrintStream outStream) {
         outStream.println("Available files:");
-        var midiFiles = StaticFileHelper.getMidiFilesInDirectory(midiDirectory);
+        var midiFiles = FileHelper.getMidiFilesInDirectory(midiDirectory);
         var scanner = new Scanner(inputStream);
         int i = 0;
 
