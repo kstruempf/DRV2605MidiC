@@ -1,0 +1,6 @@
+DRV2605
+
+
+I2C Interface
+	slave address 0x58 (7-bit) or 1011000
+	real time playback register 0x02
