@@ -25,22 +25,24 @@ public class I2CWriter implements IWriter {
         this.outStream = outStream;
     }
 
-    private void initialize() throws IOException, I2CFactory.UnsupportedBusNumberException {
+    public void initialize() throws WriterException {
         if (this.device == null) {
-            outStream.println("Initializing device...");
-            I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_2);
-            this.device = i2c.getDevice(DRV2605_ADDRESS);
+            try {
+                outStream.println("Initializing device...");
+                I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_2);
+                this.device = i2c.getDevice(DRV2605_ADDRESS);
+            } catch (IOException e) {
+                throw new WriterException("Failed to initialize", e);
+            } catch (I2CFactory.UnsupportedBusNumberException e) {
+                throw new WriterException("Bus not supported", e);
+            }
+        } else {
+            outStream.println("Already initialized");
         }
     }
 
     @Override
     public void writeNext(Value value) throws WriterException {
-        try {
-            initialize();
-        } catch (IOException | I2CFactory.UnsupportedBusNumberException e) {
-            throw new WriterException("Failed to initialize device", e);
-        }
-
         try {
             outStream.println("Writing " + value + " to register " + REGISTER_RTP_ADDRESS);
             device.write(REGISTER_RTP_ADDRESS, value.getBytes());

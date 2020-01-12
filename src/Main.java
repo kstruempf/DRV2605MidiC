@@ -1,9 +1,9 @@
 import converter.impl.MidiMessageConverter;
 import exceptions.ReaderException;
+import exceptions.WriterException;
 import reader.IFileReader;
 import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
-import writer.impl.ConsoleWriter;
 import writer.impl.I2CWriter;
 
 import java.io.File;
@@ -18,7 +18,7 @@ public class Main {
     private static final PrintStream outStream = System.out;
     private static final PrintStream errStream = System.err;
 
-    public static void main(String[] args) throws ReaderException {
+    public static void main(String[] args) throws ReaderException, WriterException {
         var midiDirectory = new File(args[0]);
 
         if (args.length != 1) {
@@ -38,6 +38,8 @@ public class Main {
         outStream.printf("Selected file %s\n", selectedFile.getName());
 
         IWriter writer = new I2CWriter(outStream);
+
+        writer.initialize();
 
         IFileReader reader = new SimpleMidiFileReader(selectedFile, new MidiMessageConverter(), writer, outStream);
 
