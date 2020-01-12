@@ -2,6 +2,7 @@ package reader.impl;
 
 import converter.ValueConverter;
 import exceptions.ReaderException;
+import exceptions.WriterException;
 import reader.IFileReader;
 import writer.IWriter;
 
@@ -43,7 +44,11 @@ public class SimpleMidiFileReader implements IFileReader {
 
         for (Track track : sequence.getTracks()) {
             for (int i = 0; i < track.size() && this.running; i++) {
-                writer.writeNext(valueConverter.convert(track.get(i).getMessage()));
+                try {
+                    writer.writeNext(valueConverter.convert(track.get(i).getMessage()));
+                } catch (WriterException e) {
+                    throw new ReaderException("Failed to write", e);
+                }
                 try {
                     Thread.sleep(fixedNoteLengthMs);
                 } catch (InterruptedException e) {

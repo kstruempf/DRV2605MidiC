@@ -3,17 +3,28 @@ package dto;
 public class Value {
 
 
-    private long value;
+    private Long value;
 
-    public Value(long value) {
+    public Value(Long value) {
         this.value = value;
     }
 
-    public long getValue() {
+    public Long getValue() {
         return value;
     }
 
     public void setValue(long value) {
         this.value = value;
+    }
+
+    public byte getBytes() {
+        return value.byteValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "value=" + value +
+                '}';
     }
 }

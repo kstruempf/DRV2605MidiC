@@ -4,6 +4,7 @@ import reader.IFileReader;
 import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
 import writer.impl.ConsoleWriter;
+import writer.impl.I2CWriter;
 
 import java.io.File;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ public class Main {
 
         outStream.printf("Selected file %s\n", selectedFile.getName());
 
-        IWriter writer = new ConsoleWriter(outStream);
+        IWriter writer = new I2CWriter(outStream);
 
         IFileReader reader = new SimpleMidiFileReader(selectedFile, new MidiMessageConverter(), writer, outStream);
 

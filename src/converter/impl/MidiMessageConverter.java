@@ -14,6 +14,6 @@ public class MidiMessageConverter implements ValueConverter<MidiMessage> {
     public Value convert(MidiMessage midiMessage) {
         outStream.printf("Converting Midi Note: %s\n", MidiHelper.getReadable(midiMessage));
 
-        return new Value(midiMessage.getMessage()[0]);
+        return new Value((long) midiMessage.getMessage()[0]);
     }
 }
