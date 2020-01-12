@@ -34,7 +34,7 @@ public class I2CWriter implements IWriter {
                 outStream.println("Initializing device...");
                 I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
                 this.device = i2c.getDevice(DRV2605_ADDRESS);
-                Thread.sleep(3000);
+                Thread.sleep(1000);
                 outStream.println("Init complete.");
                 setDeviceToRTPMode();
             } catch (IOException e) {
