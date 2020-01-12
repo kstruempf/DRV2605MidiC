@@ -29,7 +29,7 @@ public class I2CWriter implements IWriter {
         if (this.device == null) {
             try {
                 outStream.println("Initializing device...");
-                I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_2);
+                I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
                 this.device = i2c.getDevice(DRV2605_ADDRESS);
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
