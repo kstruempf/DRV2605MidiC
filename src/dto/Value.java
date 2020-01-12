@@ -6,7 +6,7 @@ public class Value {
     private Long value;
 
     public Value(Long value) {
-        this.value = value;
+        this.value = 5L;
     }
 
     public Long getValue() {
@@ -14,7 +14,7 @@ public class Value {
     }
 
     public void setValue(long value) {
-        this.value = value;
+        this.value = 5L;
     }
 
     public byte getBytes() {
