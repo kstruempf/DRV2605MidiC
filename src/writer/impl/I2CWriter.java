@@ -13,7 +13,7 @@ import java.io.PrintStream;
 @SuppressWarnings("FieldCanBeLocal")
 public class I2CWriter implements IWriter {
 
-    private final byte DRV2605_ADDRESS = 0x58;
+    private final byte DRV2605_ADDRESS = 0x5a;
 
     private final byte REGISTER_RTP_ADDRESS = 0x02;
     private final byte REGISTER_MODE_ADDRESS = 0x01;
@@ -35,6 +35,7 @@ public class I2CWriter implements IWriter {
                 I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
                 this.device = i2c.getDevice(DRV2605_ADDRESS);
                 Thread.sleep(3000);
+                outStream.println("Init complete.");
                 setDeviceToRTPMode();
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);

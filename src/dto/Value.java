@@ -6,7 +6,7 @@ public class Value {
     private Long value;
 
     public Value(Long value) {
-        this.value = 5L;
+        this.value = 50L;
     }
 
     public Long getValue() {
