@@ -17,6 +17,6 @@ public class MidiHelper {
     }
 
     public static String getReadable(MidiMessage midiMessage) {
-        return String.format("(%d) %s, %d", midiMessage.getStatus(), getKeyName(midiMessage.getMessage()[0]), midiMessage.getMessage()[0]);
+        return String.format("[%d] [%d %d]", midiMessage.getStatus(), midiMessage.getMessage()[0], midiMessage.getMessage()[1]);
     }
 }

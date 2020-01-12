@@ -15,6 +15,6 @@ public class ConsoleWriter implements IWriter {
 
     @Override
     public void writeNext(Value value) {
-        outStream.printf("Value %d\n", value.getValue());
+        outStream.printf("%d\n", value.getValue());
     }
 }

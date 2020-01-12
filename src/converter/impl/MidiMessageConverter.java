@@ -12,7 +12,7 @@ public class MidiMessageConverter implements ValueConverter<MidiMessage> {
 
     @Override
     public Value convert(MidiMessage midiMessage) {
-        outStream.printf("- Converting %s\n", MidiHelper.getReadable(midiMessage));
+        outStream.printf("Converting Midi Note: %s\n", MidiHelper.getReadable(midiMessage));
 
         return new Value(midiMessage.getMessage()[0]);
     }
