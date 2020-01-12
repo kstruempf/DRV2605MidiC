@@ -18,7 +18,7 @@ public class I2CWriter implements IWriter {
     private final byte REGISTER_RTP_ADDRESS = 0x02;
     private final byte REGISTER_MODE_ADDRESS = 0x01;
 
-    private final byte RTP_MODE = 0x5;
+    private final byte RTP_MODE = 0x05;
 
     private I2CDevice device;
     private PrintStream outStream;
