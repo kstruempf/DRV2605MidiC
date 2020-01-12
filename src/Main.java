@@ -1,7 +1,7 @@
 import converter.impl.MidiMessageConverter;
 import exceptions.ReaderException;
 import reader.IFileReader;
-import reader.impl.MidiFileReader;
+import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
 import writer.impl.ConsoleWriter;
 
@@ -38,9 +38,20 @@ public class Main {
 
         IWriter writer = new ConsoleWriter(outStream);
 
-        IFileReader reader = new MidiFileReader(selectedFile, new MidiMessageConverter(), writer, outStream);
+        IFileReader reader = new SimpleMidiFileReader(selectedFile, new MidiMessageConverter(), writer, outStream);
+
+        setupShutdownHook(reader);
 
         reader.readAll();
+
+        outStream.println("Done reading.");
+    }
+
+    private static void setupShutdownHook(IFileReader reader) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            outStream.println("Shutting down...");
+            reader.stop();
+        }));
     }
 
     private static void printUsage(PrintStream stream) {

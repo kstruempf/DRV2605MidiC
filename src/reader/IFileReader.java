@@ -8,4 +8,9 @@ public interface IFileReader {
      * Reads the entire contents of the input file and forwards the converted values to the writer.
      */
     void readAll() throws ReaderException;
+
+    /**
+     * Will end the reading of a file.
+     */
+    void stop();
 }
