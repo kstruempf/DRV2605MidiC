@@ -97,8 +97,6 @@ public class Main {
         reader.initialize();
         reader.readAll();
         reader.shutDown();
-
-        console.goodbye();
     }
 
 
