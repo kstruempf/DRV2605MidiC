@@ -3,6 +3,7 @@ package reader.impl;
 import converter.ValueConverter;
 import exceptions.ReaderException;
 import exceptions.WriterException;
+import helper.MidiHelper;
 import writer.IWriter;
 
 import javax.sound.midi.*;
@@ -12,13 +13,13 @@ import java.util.logging.Logger;
 public class SequencedMidiFileReader extends MidiFileReader implements Receiver {
     private static final Logger logger = Logger.getLogger(SequencedMidiFileReader.class.getName());
 
-    private final ValueConverter<MidiMessage> valueConverter;
+    private final ValueConverter<ShortMessage> valueConverter;
     private final IWriter writer;
 
     private Sequencer sequencer;
     private Exception exceptionWhileWritingMessage;
 
-    public SequencedMidiFileReader(File source, ValueConverter<MidiMessage> valueConverter, IWriter writer) {
+    public SequencedMidiFileReader(File source, ValueConverter<ShortMessage> valueConverter, IWriter writer) {
         super(source);
         this.valueConverter = valueConverter;
         this.writer = writer;
@@ -91,12 +92,21 @@ public class SequencedMidiFileReader extends MidiFileReader implements Receiver 
 
     @Override
     public void send(MidiMessage message, long timeStamp) {
-        try {
-            this.writer.writeNext(valueConverter.convert(message));
-        } catch (WriterException e) {
-            logger.info(e.getMessage());
-            sequencer.stop();
-            exceptionWhileWritingMessage = e;
+        if (message instanceof ShortMessage) {
+            var msg = (ShortMessage) message;
+            if (msg.getCommand() == ShortMessage.NOTE_OFF || msg.getCommand() == ShortMessage.NOTE_ON) {
+                try {
+                    this.writer.writeNext(valueConverter.convert(msg));
+                } catch (WriterException e) {
+                    logger.info(e.getMessage());
+                    sequencer.stop();
+                    exceptionWhileWritingMessage = e;
+                }
+            } else {
+                logger.info("Ignoring ShortMessage " + MidiHelper.getReadable(message) + " - neither NOTE_ON nor NOTE_OFF");
+            }
+        } else {
+            logger.info("Ignoring non ShortMessage " + MidiHelper.getReadable(message));
         }
     }
 

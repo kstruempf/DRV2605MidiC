@@ -1,6 +1,7 @@
 package helper;
 
 import javax.sound.midi.MidiMessage;
+import javax.sound.midi.ShortMessage;
 
 public class MidiHelper {
 
@@ -18,5 +19,12 @@ public class MidiHelper {
 
     public static String getReadable(MidiMessage midiMessage) {
         return String.format("[%d] [%d %d]", midiMessage.getStatus(), midiMessage.getMessage()[0], midiMessage.getMessage()[1]);
+    }
+
+    public static String getReadable(ShortMessage message) {
+        if (message.getCommand() == ShortMessage.NOTE_ON || message.getCommand() == ShortMessage.NOTE_OFF) {
+            return String.format("[%d] [%d (%s) %d]", message.getCommand(), message.getData1(), getKeyName(message.getData1()), message.getData2());
+        }
+        return String.format("[%d] [%d %d]", message.getCommand(), message.getData1(), message.getData2());
     }
 }

@@ -1,5 +1,6 @@
 import com.pi4j.util.Console;
-import converter.impl.MidiMessageConverter;
+import converter.impl.GeneralMessageConverter;
+import converter.impl.MidiNoteConverter;
 import exceptions.ReaderException;
 import exceptions.WriterException;
 import helper.OptionsHelper;
@@ -69,6 +70,12 @@ public class Main {
 
         parseArguments(args);
 
+
+        if (cmd.hasOption("help")) {
+            printUsage();
+            return;
+        }
+
         if (!midiDirectory.isDirectory()) {
             console.println("Directory %s not found", midiDirectory);
             System.exit(1);
@@ -89,9 +96,9 @@ public class Main {
 
         if (cmd.hasOption("simplereader")) {
             logger.info("Using simple file reader");
-            reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer);
+            reader = new SimpleMidiFileReader(inputFile, new GeneralMessageConverter(), writer);
         } else {
-            reader = new SequencedMidiFileReader(inputFile, new MidiMessageConverter(), writer);
+            reader = new SequencedMidiFileReader(inputFile, new MidiNoteConverter(), writer);
         }
 
         reader.initialize();

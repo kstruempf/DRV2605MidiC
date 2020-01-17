@@ -1,30 +1,53 @@
 package dto;
 
+import enumeration.ValueType;
+
 public class Value {
 
+    private Long amplitude;
+    private Byte address;
+    private ValueType valueType;
 
-    private Long value;
-
-    public Value(Long value) {
-        this.value = value;
+    public Value(Long amplitude, Byte address, ValueType valueType) {
+        this.amplitude = amplitude;
+        this.address = address;
+        this.valueType = valueType;
     }
 
-    public Long getValue() {
-        return value;
+    public Long getAmplitude() {
+        return amplitude;
     }
 
-    public void setValue(long value) {
-        this.value = 5L;
+    public void setAmplitude(long amplitude) {
+        this.amplitude = 5L;
     }
 
     public byte getBytes() {
-        return value.byteValue();
+        return amplitude.byteValue();
+    }
+
+    public Byte getAddress() {
+        return address;
+    }
+
+    public void setAddress(Byte address) {
+        this.address = address;
+    }
+
+    public ValueType getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(ValueType valueType) {
+        this.valueType = valueType;
     }
 
     @Override
     public String toString() {
         return "Value{" +
-                "value=" + value +
+                "amplitude=" + amplitude +
+                ", address=" + address +
+                ", valueType=" + valueType +
                 '}';
     }
 }

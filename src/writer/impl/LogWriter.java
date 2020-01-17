@@ -11,7 +11,7 @@ public class LogWriter implements IWriter {
 
     @Override
     public void initialize() throws WriterException {
-
+        logger.info("Initializing LogWriter");
     }
 
     @Override

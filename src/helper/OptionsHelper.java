@@ -24,6 +24,10 @@ public class OptionsHelper {
         useSimpleFileReader.setRequired(false);
         options.addOption(useSimpleFileReader);
 
+        Option printHelp = new Option("h", "help", false, "prints help");
+        useSimpleFileReader.setRequired(false);
+        options.addOption(printHelp);
+
         return options;
     }
 }
