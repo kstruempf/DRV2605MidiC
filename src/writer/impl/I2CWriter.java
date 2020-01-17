@@ -8,10 +8,11 @@ import exceptions.WriterException;
 import writer.IWriter;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.util.logging.Logger;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class I2CWriter implements IWriter {
+    private static final Logger logger = Logger.getLogger(I2CWriter.class.getName());
 
     private final byte DRV2605_ADDRESS = 0x5a;
 
@@ -21,21 +22,19 @@ public class I2CWriter implements IWriter {
     private final byte RTP_MODE = 0x05;
 
     private I2CDevice device;
-    private PrintStream outStream;
 
-    public I2CWriter(PrintStream outStream) {
+    public I2CWriter() {
 
-        this.outStream = outStream;
     }
 
     public void initialize() throws WriterException {
         if (this.device == null) {
             try {
-                outStream.println("Initializing device...");
+                logger.info("Initializing device...");
                 I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
                 this.device = i2c.getDevice(DRV2605_ADDRESS);
                 Thread.sleep(1000);
-                outStream.println("Init complete.");
+                logger.info("Init complete.");
                 setDeviceToRTPMode();
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
@@ -45,12 +44,12 @@ public class I2CWriter implements IWriter {
                 throw new WriterException("Init interrupted", e);
             }
         } else {
-            outStream.println("Already initialized");
+            logger.info("Already initialized");
         }
     }
 
     public void setDeviceToRTPMode() throws WriterException {
-        outStream.println("Setting device to RTP mode");
+        logger.info("Setting device to RTP mode");
         if (this.device != null) {
             try {
                 this.device.write(REGISTER_MODE_ADDRESS, RTP_MODE);
@@ -65,7 +64,7 @@ public class I2CWriter implements IWriter {
     @Override
     public void writeNext(Value value) throws WriterException {
         try {
-            outStream.println("Writing " + value + " to register " + REGISTER_RTP_ADDRESS);
+            logger.info("Writing " + value + " to register " + REGISTER_RTP_ADDRESS);
             device.write(REGISTER_RTP_ADDRESS, value.getBytes());
         } catch (IOException e) {
             throw new WriterException("Failed to write " + value.toString(), e);

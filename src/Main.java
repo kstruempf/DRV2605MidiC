@@ -1,64 +1,102 @@
+import com.pi4j.util.Console;
 import converter.impl.MidiMessageConverter;
 import exceptions.ReaderException;
 import exceptions.WriterException;
+import helper.OptionsHelper;
+import org.apache.commons.cli.*;
 import reader.IFileReader;
 import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
 import writer.impl.I2CWriter;
+import writer.impl.LogWriter;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.logging.Logger;
 
 import static helper.FileHelper.selectMidiFile;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(I2CWriter.class.getName());
 
     private static final InputStream inStream = System.in;
     private static final PrintStream outStream = System.out;
-    private static final PrintStream errStream = System.err;
+
+    private static final Console console = new Console();
+
+    private static File inputFile;
+    private static File midiDirectory = new File("./midi");
+
+    private static IWriter writer;
+    private static IFileReader reader;
+
+    private static void parseArguments(String[] args) {
+        Options options = OptionsHelper.getOptions();
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            console.println(e.getMessage());
+            printUsage();
+            System.exit(1);
+            return;
+        }
+
+        if (cmd.hasOption("input")) {
+            inputFile = new File(cmd.getOptionValue("input"));
+            logger.info("Input file specified " + inputFile.getAbsolutePath());
+        } else {
+            if (cmd.hasOption("directory")) {
+                midiDirectory = new File(cmd.getOptionValue("directory"));
+                logger.info("Searching directory " + midiDirectory.getAbsolutePath() + " for files");
+            }
+        }
+
+        if (cmd.hasOption("logonly")) {
+            logger.info("Only logging produced values");
+            writer = new LogWriter();
+        }
+    }
 
     public static void main(String[] args) throws ReaderException, WriterException {
-        var midiDirectory = new File(args[0]);
+        console.title("Controller for DRV2605");
+        console.promptForExit();
 
-        if (args.length != 1) {
-            printUsage(outStream);
-            System.exit(1);
-        }
-
-        outStream.println(midiDirectory.getAbsolutePath());
+        parseArguments(args);
 
         if (!midiDirectory.isDirectory()) {
-            errStream.printf("Directory %s not found", midiDirectory);
+            console.println("Directory %s not found", midiDirectory);
             System.exit(1);
         }
 
-        var selectedFile = selectMidiFile(midiDirectory, inStream, outStream);
+        if (inputFile == null) {
+            // Run file selection if no file specified in program arguments
+            inputFile = selectMidiFile(midiDirectory, inStream, outStream);
+        }
 
-        outStream.printf("Selected file %s\n", selectedFile.getName());
+        logger.info(String.format("Selected file %s\n", inputFile.getName()));
 
-        IWriter writer = new I2CWriter(outStream);
+        if (writer == null) {
+            writer = new I2CWriter();
+        }
 
         writer.initialize();
 
-        IFileReader reader = new SimpleMidiFileReader(selectedFile, new MidiMessageConverter(), writer, outStream);
-
-        setupShutdownHook(reader);
+        reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer, outStream);
 
         reader.readAll();
 
-        outStream.println("Done reading.");
+        console.goodbye();
     }
 
-    private static void setupShutdownHook(IFileReader reader) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            outStream.println("Shutting down...");
-            reader.stop();
-        }));
-    }
 
-    private static void printUsage(PrintStream stream) {
-        stream.print("program directory");
+    private static void printUsage() {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("drv2605-midi", OptionsHelper.getOptions());
     }
 
 }
