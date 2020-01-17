@@ -4,4 +4,8 @@ build:
 	./mvnw clean install
 start-midi:
 	# java -classpath ./target/classes Main -L
+	./mvnw exec:java -Dexec.mainClass="Main"
+
+start-log:
+	# java -classpath ./target/classes Main -L
 	./mvnw exec:java -Dexec.mainClass="Main" -Dexec.args="-L"
