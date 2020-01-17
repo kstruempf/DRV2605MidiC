@@ -27,6 +27,7 @@ public class I2CWriter implements IWriter {
 
     }
 
+    @Override
     public void initialize() throws WriterException {
         if (this.device == null) {
             try {

@@ -8,9 +8,9 @@ public class Value {
     private Byte address;
     private ValueType valueType;
 
-    public Value(Long amplitude, Byte address, ValueType valueType) {
+    public Value(Long amplitude, Byte destination, ValueType valueType) {
         this.amplitude = amplitude;
-        this.address = address;
+        this.address = destination;
         this.valueType = valueType;
     }
 
