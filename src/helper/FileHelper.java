@@ -33,6 +33,8 @@ public class FileHelper {
         var scanner = new Scanner(inputStream);
         int i = 0;
 
+        midiFiles.sort(File::compareTo);
+
         for (File midiFile : midiFiles) {
             outStream.printf("\t[%d] %s\n", i, midiFile.getName());
             i++;

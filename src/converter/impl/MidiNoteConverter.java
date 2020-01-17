@@ -24,6 +24,11 @@ public class MidiNoteConverter implements ValueConverter<ShortMessage> {
                 shortMessage.getCommand() == ShortMessage.NOTE_ON ? ValueType.START : ValueType.STOP
         );
 
+        if (shortMessage.getData2() == 0) {
+            // also interpreting velocity 0 as NOTE_OFF
+            value.setValueType(ValueType.STOP);
+        }
+
         logger.info("Converting " + MidiHelper.getReadable(shortMessage) + " to value " + value);
 
         return value;
