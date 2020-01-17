@@ -20,6 +20,10 @@ public class OptionsHelper {
         useConsoleWriter.setRequired(false);
         options.addOption(useConsoleWriter);
 
+        Option useSimpleFileReader = new Option("s", "simplereader", false, "uses a simple midi file reader with a fixed read interval of 500 ms");
+        useSimpleFileReader.setRequired(false);
+        options.addOption(useSimpleFileReader);
+
         return options;
     }
 }

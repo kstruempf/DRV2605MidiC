@@ -24,6 +24,7 @@ public class Main {
     private static final PrintStream outStream = System.out;
 
     private static final Console console = new Console();
+    private static CommandLine cmd;
 
     private static File inputFile;
     private static File midiDirectory = new File("./midi");
@@ -35,7 +36,6 @@ public class Main {
         Options options = OptionsHelper.getOptions();
 
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
@@ -86,7 +86,13 @@ public class Main {
 
         writer.initialize();
 
-        reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer, outStream);
+        if (cmd.hasOption("simplereader")) {
+            logger.info("Using simple file reader");
+            reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer);
+        }
+
+        // TODO replace with proper reader
+        reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer);
 
         reader.readAll();
 

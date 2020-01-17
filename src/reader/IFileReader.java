@@ -9,8 +9,4 @@ public interface IFileReader {
      */
     void readAll() throws ReaderException;
 
-    /**
-     * Will end the reading of a file.
-     */
-    void stop();
 }

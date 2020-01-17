@@ -9,30 +9,29 @@ import writer.IWriter;
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.util.logging.Logger;
 
 public class SimpleMidiFileReader implements IFileReader {
+    private static final Logger logger = Logger.getLogger(SimpleMidiFileReader.class.getName());
 
     private final Long fixedNoteLengthMs;
     private final File source;
     private final ValueConverter<MidiMessage> valueConverter;
     private final IWriter writer;
-    private final PrintStream outStream;
 
     private Boolean running;
 
-    public SimpleMidiFileReader(File source, ValueConverter<MidiMessage> valueConverter, IWriter writer, PrintStream outStream) {
+    public SimpleMidiFileReader(File source, ValueConverter<MidiMessage> valueConverter, IWriter writer) {
         this.source = source;
         this.valueConverter = valueConverter;
         this.writer = writer;
-        this.outStream = outStream;
         this.fixedNoteLengthMs = 500L;
         this.running = true;
     }
 
     @Override
     public void readAll() throws ReaderException {
-        outStream.printf("Reading from %s...\n", source.getName());
+        logger.info(String.format("Reading from %s...\n", source.getName()));
 
         Sequence sequence;
 
@@ -60,15 +59,9 @@ public class SimpleMidiFileReader implements IFileReader {
             }
         }
         if (this.running) {
-            outStream.println("End of file");
+            logger.info("End of file");
         } else {
-            outStream.println("Reading interrupted");
+            logger.info("Reading interrupted");
         }
-    }
-
-    @Override
-    public void stop() {
-        outStream.println("Stopping reader");
-        this.running = false;
     }
 }
