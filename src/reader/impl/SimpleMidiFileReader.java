@@ -3,26 +3,25 @@ package reader.impl;
 import converter.ValueConverter;
 import exceptions.ReaderException;
 import exceptions.WriterException;
-import reader.IFileReader;
 import writer.IWriter;
 
-import javax.sound.midi.*;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Track;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Logger;
 
-public class SimpleMidiFileReader implements IFileReader {
+public class SimpleMidiFileReader extends MidiFileReader {
     private static final Logger logger = Logger.getLogger(SimpleMidiFileReader.class.getName());
 
     private final Long fixedNoteLengthMs;
-    private final File source;
     private final ValueConverter<MidiMessage> valueConverter;
     private final IWriter writer;
 
     private Boolean running;
 
     public SimpleMidiFileReader(File source, ValueConverter<MidiMessage> valueConverter, IWriter writer) {
-        this.source = source;
+        super(source);
         this.valueConverter = valueConverter;
         this.writer = writer;
         this.fixedNoteLengthMs = 500L;
@@ -30,16 +29,15 @@ public class SimpleMidiFileReader implements IFileReader {
     }
 
     @Override
+    public void initialize() throws ReaderException {
+        // nothing to do here
+    }
+
+    @Override
     public void readAll() throws ReaderException {
-        logger.info(String.format("Reading from %s...\n", source.getName()));
+        logger.info(String.format("Reading from %s...\n", super.getSequenceName()));
 
-        Sequence sequence;
-
-        try {
-            sequence = MidiSystem.getSequence(source);
-        } catch (InvalidMidiDataException | IOException e) {
-            throw new ReaderException("Failed to get sequence from source file", e);
-        }
+        Sequence sequence = getSourceSequence();
 
         for (Track track : sequence.getTracks()) {
             for (int i = 0; i < track.size() && this.running; i++) {
@@ -63,5 +61,10 @@ public class SimpleMidiFileReader implements IFileReader {
         } else {
             logger.info("Reading interrupted");
         }
+    }
+
+    @Override
+    public void shutDown() throws ReaderException {
+        // nothing to do here
     }
 }

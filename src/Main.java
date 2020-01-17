@@ -5,6 +5,7 @@ import exceptions.WriterException;
 import helper.OptionsHelper;
 import org.apache.commons.cli.*;
 import reader.IFileReader;
+import reader.impl.SequencedMidiFileReader;
 import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
 import writer.impl.I2CWriter;
@@ -89,12 +90,13 @@ public class Main {
         if (cmd.hasOption("simplereader")) {
             logger.info("Using simple file reader");
             reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer);
+        } else {
+            reader = new SequencedMidiFileReader(inputFile, new MidiMessageConverter(), writer);
         }
 
-        // TODO replace with proper reader
-        reader = new SimpleMidiFileReader(inputFile, new MidiMessageConverter(), writer);
-
+        reader.initialize();
         reader.readAll();
+        reader.shutDown();
 
         console.goodbye();
     }
