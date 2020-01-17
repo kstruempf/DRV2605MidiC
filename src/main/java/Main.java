@@ -11,6 +11,7 @@ import reader.impl.SimpleMidiFileReader;
 import writer.IWriter;
 import writer.impl.I2CWriter;
 import writer.impl.LogWriter;
+import writer.impl.MultiI2CWriter;
 
 import java.io.File;
 import java.io.InputStream;
@@ -89,7 +90,11 @@ public class Main {
         logger.info(String.format("Selected file %s\n", inputFile.getName()));
 
         if (writer == null) {
-            writer = new I2CWriter();
+            if (cmd.hasOption("simplewriter")) {
+                writer = new I2CWriter();
+            } else {
+                writer = new MultiI2CWriter();
+            }
         }
 
         writer.initialize();

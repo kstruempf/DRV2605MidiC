@@ -20,9 +20,13 @@ public class OptionsHelper {
         useConsoleWriter.setRequired(false);
         options.addOption(useConsoleWriter);
 
-        Option useSimpleFileReader = new Option("s", "simplereader", false, "uses a simple midi file reader with a fixed read interval of 500 ms");
+        Option useSimpleFileReader = new Option("r", "simplereader", false, "uses a simple midi file reader with a fixed read interval of 500 ms");
         useSimpleFileReader.setRequired(false);
         options.addOption(useSimpleFileReader);
+
+        Option useSimpleFileWriter = new Option("w", "simplewriter", false, "uses a simple I2C writer (only controls a single motor directly connected to the I2C bus)");
+        useSimpleFileWriter.setRequired(false);
+        options.addOption(useSimpleFileWriter);
 
         Option printHelp = new Option("h", "help", false, "prints help");
         useSimpleFileReader.setRequired(false);
