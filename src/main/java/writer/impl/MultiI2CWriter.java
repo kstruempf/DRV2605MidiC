@@ -52,10 +52,12 @@ public class MultiI2CWriter implements IWriter {
             logger.info("Setting motor " + motor_address + " to RTP Mode");
             if (mux != null) {
                 try {
-                    mux.write(motor_address);
-                    mux.write(REGISTER_MODE_ADDRESS, RTP_MODE);
+                    mux.write(motor_address, new byte[] {REGISTER_MODE_ADDRESS, RTP_MODE});
+                    Thread.sleep(500);
                 } catch (IOException e) {
                     throw new WriterException("Failed to set device to RTP Mode", e);
+                } catch (InterruptedException e) {
+                    throw new WriterException("RTP Mode init interrupted", e);
                 }
             } else {
                 throw new WriterException("Device is not set");
@@ -69,18 +71,19 @@ public class MultiI2CWriter implements IWriter {
             throw new WriterException("Not initialized correctly");
         }
 
-        try {
+        logger.info("Writing " + value + " to motor " + value.getAddress());
+        /*try {
             mux.write(value.getAddress());
         } catch (IOException e) {
             logger.info(e.getMessage());
             throw new WriterException("Failed to address motor " + value.getAddress(), e);
-        }
+        }*/
 
         try {
-            mux.write(REGISTER_RTP_ADDRESS, value.getBytes());
+            mux.write(value.getAddress(), new byte[] {REGISTER_RTP_ADDRESS, value.getBytes()});
         } catch (IOException e) {
             logger.info(e.getMessage());
-            throw new WriterException("Failed to write " + value + " to motor", e);
+            throw new WriterException("Failed to write " + value + " to motor " + value.getAddress(), e);
         }
     }
 }
