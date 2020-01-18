@@ -13,7 +13,11 @@ import java.util.logging.Logger;
  */
 public class MidiNoteConverter implements ValueConverter<ShortMessage> {
     private static final Logger logger = Logger.getLogger(GeneralMessageConverter.class.getName());
+    private final Integer numberOfDevices;
 
+    public MidiNoteConverter() {
+        numberOfDevices = 8;
+    }
 
     @Override
     public Value convert(ShortMessage shortMessage) {
@@ -34,7 +38,7 @@ public class MidiNoteConverter implements ValueConverter<ShortMessage> {
         return value;
     }
 
-    private Byte noteToAddress(int data1) {
-        return (byte) (data1 - 36);
+    private Integer noteToAddress(Integer data1) {
+        return data1 % numberOfDevices;
     }
 }

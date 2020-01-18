@@ -10,16 +10,10 @@ import writer.IWriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@SuppressWarnings("FieldCanBeLocal")
+import static constants.Constants.*;
+
 public class I2CWriter implements IWriter {
     private static final Logger logger = Logger.getLogger(I2CWriter.class.getName());
-
-    private final byte DRV2605_ADDRESS = 0x5a;
-
-    private final byte REGISTER_RTP_ADDRESS = 0x02;
-    private final byte REGISTER_MODE_ADDRESS = 0x01;
-
-    private final byte RTP_MODE = 0x05;
 
     private I2CDevice device;
 

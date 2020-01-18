@@ -5,12 +5,12 @@ import enumeration.ValueType;
 public class Value {
 
     private Long amplitude;
-    private Byte address;
+    private Integer destination;
     private ValueType valueType;
 
-    public Value(Long amplitude, Byte destination, ValueType valueType) {
+    public Value(Long amplitude, Integer destination, ValueType valueType) {
         this.amplitude = amplitude;
-        this.address = destination;
+        this.destination = destination;
         this.valueType = valueType;
     }
 
@@ -26,12 +26,12 @@ public class Value {
         return amplitude.byteValue();
     }
 
-    public Byte getAddress() {
-        return address;
+    public Integer getDestination() {
+        return destination;
     }
 
-    public void setAddress(Byte address) {
-        this.address = address;
+    public void setDestination(Integer destination) {
+        this.destination = destination;
     }
 
     public ValueType getValueType() {
@@ -46,7 +46,7 @@ public class Value {
     public String toString() {
         return "Value{" +
                 "amplitude=" + amplitude +
-                ", address=" + address +
+                ", destination=" + destination +
                 ", valueType=" + valueType +
                 '}';
     }

@@ -10,18 +10,10 @@ import writer.IWriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import static constants.Constants.*;
+
 public class MultiI2CWriter implements IWriter {
     private static final Logger logger = Logger.getLogger(MultiI2CWriter.class.getName());
-
-    private final byte TCA9548A_ADDRESS = 0x70;
-    private final byte DRV2605_ADDRESS = 0x5a;
-
-    private final byte REGISTER_RTP_ADDRESS = 0x02;
-    private final byte REGISTER_MODE_ADDRESS = 0x01;
-
-    private final byte RTP_MODE = 0x05;
-
-    private final byte[] MOTOR_ADDRESSES = new byte[]{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
     private I2CDevice mux;
     private I2CDevice motor;
@@ -73,14 +65,14 @@ public class MultiI2CWriter implements IWriter {
             throw new WriterException("Not initialized correctly");
         }
 
-        logger.info("Writing " + value + " to motor " + value.getAddress());
+        logger.info(String.format("Writing %s to motor %d via channel 0x%02X", value, value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()]));
 
         try {
-            mux.write(value.getAddress()); // switch channel to device
+            mux.write(MUX_CONTROL_REGISTER_VALUES[value.getDestination()]); // switch channel to device
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
         } catch (IOException e) {
             logger.info(e.getMessage());
-            throw new WriterException("Failed to write " + value + " to motor " + value.getAddress(), e);
+            throw new WriterException("Failed to write " + value + " to motor " + value.getDestination(), e);
         }
     }
 }

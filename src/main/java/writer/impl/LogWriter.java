@@ -6,6 +6,8 @@ import writer.IWriter;
 
 import java.util.logging.Logger;
 
+import static constants.Constants.MUX_CONTROL_REGISTER_VALUES;
+
 public class LogWriter implements IWriter {
     private static final Logger logger = Logger.getLogger(LogWriter.class.getName());
 
@@ -16,6 +18,6 @@ public class LogWriter implements IWriter {
 
     @Override
     public void writeNext(Value value) {
-        logger.info(value.toString());
+        logger.info(String.format("Writing %s to motor %d via channel 0x%02X", value, value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()]));
     }
 }
