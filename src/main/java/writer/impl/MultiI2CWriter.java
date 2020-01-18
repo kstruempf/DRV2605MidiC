@@ -72,7 +72,9 @@ public class MultiI2CWriter implements IWriter {
             mux.write(MUX_CONTROL_REGISTER_VALUES[value.getDestination()]); // switch channel to device
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
         } catch (IOException e) {
-            logger.log(Level.WARNING, e.getMessage());
+            logger.log(Level.WARNING, String.format("Motor %d on channel 0x%02X not reachable (ERROR: %s)",
+                    value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()], e.getMessage())
+            );
             // throw new WriterException("Failed to write " + value + " to motor " + value.getDestination(), e);
         }
     }

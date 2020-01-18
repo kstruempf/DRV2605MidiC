@@ -1,11 +1,14 @@
+help:
+	./mvnw exec:java -Dexec.mainClass="Main" -Dexec.args="-h"
+
 build:
-	echo 'Compiling DRV2605MidiC...'
-	#javac -d out -cp src src/Main.java
 	./mvnw clean install
+
 start-midi:
-	# java -classpath ./target/classes Main -L
 	./mvnw exec:java -Dexec.mainClass="Main"
 
 start-log:
-	# java -classpath ./target/classes Main -L
 	./mvnw exec:java -Dexec.mainClass="Main" -Dexec.args="-L"
+
+start-motor-only:
+	./mvnw exec:java -Dexec.mainClass="Main" -Dexec.args="-w"
