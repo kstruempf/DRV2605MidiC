@@ -8,6 +8,7 @@ import exceptions.WriterException;
 import writer.IWriter;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static constants.Constants.*;
@@ -71,8 +72,8 @@ public class MultiI2CWriter implements IWriter {
             mux.write(MUX_CONTROL_REGISTER_VALUES[value.getDestination()]); // switch channel to device
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
         } catch (IOException e) {
-            logger.info(e.getMessage());
-            throw new WriterException("Failed to write " + value + " to motor " + value.getDestination(), e);
+            logger.log(Level.WARNING, e.getMessage());
+            // throw new WriterException("Failed to write " + value + " to motor " + value.getDestination(), e);
         }
     }
 }
