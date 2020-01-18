@@ -61,7 +61,7 @@ public class MultiI2CWriter implements IWriter {
     }
 
     @Override
-    public void writeNext(Value value) throws WriterException {
+    public synchronized void writeNext(Value value) throws WriterException {
         if (mux == null) {
             throw new WriterException("Not initialized correctly");
         }
@@ -73,9 +73,7 @@ public class MultiI2CWriter implements IWriter {
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
         } catch (IOException e) {
             logger.log(Level.WARNING, String.format("Motor %d on channel 0x%02X not reachable (ERROR: %s)",
-                    value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()], e.getMessage())
-            );
-            // throw new WriterException("Failed to write " + value + " to motor " + value.getDestination(), e);
+                    value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()], e.getMessage()));
         }
     }
 }
