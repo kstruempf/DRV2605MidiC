@@ -21,11 +21,14 @@ public abstract class MidiFileReader implements IFileReader {
     }
 
     protected Sequence getSourceSequence() throws ReaderException {
+        if (source == null || !source.exists()) {
+            throw new ReaderException("File not found");
+        }
         Sequence sequence;
         try {
             sequence = MidiSystem.getSequence(source);
         } catch (InvalidMidiDataException | IOException e) {
-            throw new ReaderException("Failed to get sequence from source file", e);
+            throw new ReaderException("Failed to get sequence from source file " + source.getAbsolutePath(), e);
         }
         return sequence;
     }

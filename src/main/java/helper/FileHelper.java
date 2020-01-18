@@ -3,10 +3,7 @@ package helper;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileHelper {
 
@@ -41,11 +38,16 @@ public class FileHelper {
         }
 
         outStream.print("Select a midi file to read: ");
-        var userInput = scanner.nextInt();
-
-        if (userInput < 0 || userInput >= midiFiles.size()) {
+        int userInput;
+        try {
+            userInput = scanner.nextInt();
+        } catch (InputMismatchException e) {
             outStream.println("Invalid input");
-            System.exit(1);
+            return null;
+        }
+        if (userInput < 0 || userInput >= midiFiles.size()) {
+            outStream.println("No file selected");
+            return null;
         }
 
         return midiFiles.get(userInput);

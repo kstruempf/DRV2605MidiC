@@ -16,6 +16,7 @@ import writer.impl.MultiI2CWriter;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static helper.FileHelper.selectMidiFile;
@@ -65,12 +66,11 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws ReaderException, WriterException {
+    public static void main(String[] args) {
         console.title("Controller for DRV2605");
         console.promptForExit();
 
         parseArguments(args);
-
 
         if (cmd.hasOption("help")) {
             printUsage();
@@ -82,33 +82,67 @@ public class Main {
             System.exit(1);
         }
 
-        if (inputFile == null) {
-            // Run file selection if no file specified in program arguments
-            inputFile = selectMidiFile(midiDirectory, inStream, outStream);
-        }
+        while (true) {
+            if (inputFile == null) {
+                // Run file selection if no file specified in program arguments
+                inputFile = selectMidiFile(midiDirectory, inStream, outStream);
+            }
 
-        logger.info(String.format("Selected file %s\n", inputFile.getName()));
+            if (inputFile == null) {
+                break;
+            }
 
-        if (writer == null) {
-            if (cmd.hasOption("simplewriter")) {
-                writer = new I2CWriter();
+            logger.info(String.format("Selected file %s\n", inputFile.getName()));
+
+            if (writer == null) {
+                if (cmd.hasOption("simplewriter")) {
+                    writer = new I2CWriter();
+                } else {
+                    writer = new MultiI2CWriter();
+                }
+            }
+
+            try {
+                writer.initialize();
+            } catch (WriterException e) {
+                logger.log(Level.SEVERE, "Error during writer initialization: " + e.getMessage());
+                System.exit(1);
+            }
+
+            if (cmd.hasOption("simplereader")) {
+                logger.info("Using simple file reader");
+                reader = new SimpleMidiFileReader(inputFile, new GeneralMessageConverter(), writer);
             } else {
-                writer = new MultiI2CWriter();
+                reader = new SequencedMidiFileReader(inputFile, new MidiNoteConverter(), writer);
+            }
+
+            try {
+                reader.initialize();
+            } catch (ReaderException e) {
+                logger.log(Level.SEVERE, "Error during initialization: " + e.getMessage());
+                System.exit(1);
+            }
+
+            try {
+                reader.readAll();
+            } catch (ReaderException e) {
+                logger.log(Level.SEVERE, "Error while reading: " + e.getMessage());
+                System.exit(1);
+            }
+
+            if (cmd.hasOption("input")) {
+                break;
+            } else {
+                inputFile = null;
             }
         }
-
-        writer.initialize();
-
-        if (cmd.hasOption("simplereader")) {
-            logger.info("Using simple file reader");
-            reader = new SimpleMidiFileReader(inputFile, new GeneralMessageConverter(), writer);
-        } else {
-            reader = new SequencedMidiFileReader(inputFile, new MidiNoteConverter(), writer);
+        if (reader != null) {
+            try {
+                reader.shutDown();
+            } catch (ReaderException e) {
+                logger.log(Level.SEVERE, e.getMessage());
+            }
         }
-
-        reader.initialize();
-        reader.readAll();
-        reader.shutDown();
     }
 
 
