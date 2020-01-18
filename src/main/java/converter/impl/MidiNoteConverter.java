@@ -35,6 +35,6 @@ public class MidiNoteConverter implements ValueConverter<ShortMessage> {
     }
 
     private Byte noteToAddress(int data1) {
-        return 0x1;
+        return (byte) (data1 - 36);
     }
 }
