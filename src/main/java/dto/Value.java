@@ -4,22 +4,22 @@ import enumeration.ValueType;
 
 public class Value {
 
-    private Long amplitude;
+    private Integer amplitude;
     private Integer destination;
     private ValueType valueType;
 
-    public Value(Long amplitude, Integer destination, ValueType valueType) {
+    public Value(Integer amplitude, Integer destination, ValueType valueType) {
         this.amplitude = amplitude;
         this.destination = destination;
         this.valueType = valueType;
     }
 
-    public Long getAmplitude() {
+    public Integer getAmplitude() {
         return amplitude;
     }
 
-    public void setAmplitude(long amplitude) {
-        this.amplitude = 5L;
+    public void setAmplitude(Integer amplitude) {
+        this.amplitude = amplitude;
     }
 
     public byte getBytes() {

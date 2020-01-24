@@ -23,7 +23,7 @@ public class MidiNoteConverter implements ValueConverter<ShortMessage> {
     public Value convert(ShortMessage shortMessage) {
 
         var value = new Value(
-                (long) shortMessage.getData2(), // use velocity as amplitude value
+                shortMessage.getData2(), // use velocity as amplitude value
                 noteToAddress(shortMessage.getData1()), // map the midi note to a I2C address
                 shortMessage.getCommand() == ShortMessage.NOTE_ON ? ValueType.START : ValueType.STOP
         );

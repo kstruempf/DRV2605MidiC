@@ -12,7 +12,7 @@ public class GeneralMessageConverter implements ValueConverter<MidiMessage> {
 
     @Override
     public Value convert(MidiMessage midiMessage) {
-        var newValue = new Value((long) midiMessage.getMessage()[0] * -1 / 3, null, null);
+        var newValue = new Value((int) midiMessage.getMessage()[0] * -1 / 3, null, null);
 
         logger.info(String.format("Converting Midi Note: %s to value: %s", MidiHelper.getReadable(midiMessage), newValue.toString()));
 
