@@ -23,6 +23,9 @@ public class Value {
     }
 
     public byte getBytes() {
+        if (valueType == ValueType.STOP){
+            return 0;
+        }
         return amplitude.byteValue();
     }
 

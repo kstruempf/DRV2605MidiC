@@ -38,7 +38,5 @@ public class MidiNoteConverter implements ValueConverter<ShortMessage> {
         return value;
     }
 
-    private Integer noteToAddress(Integer data1) {
-        return data1 % numberOfDevices;
-    }
+    private Integer noteToAddress(Integer data1) { return data1 % numberOfDevices + 1; }
 }
