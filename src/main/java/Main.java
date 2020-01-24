@@ -31,7 +31,7 @@ public class Main {
     private static CommandLine cmd;
 
     private static File inputFile;
-    private static File midiDirectory = new File("./midi");
+    private static File midiDirectory = new File("./midi_test_files");
 
     private static IWriter writer;
     private static IFileReader reader;

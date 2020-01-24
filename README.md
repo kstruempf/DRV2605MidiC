@@ -32,7 +32,7 @@ Install dependencies with
 
 `make build`
 
-Start the program with. Lets you select a midi file from the midi folder.
+Start the program with. Lets you select a midi file from the midi_test_files folder.
 
 `make start-midi`
 
