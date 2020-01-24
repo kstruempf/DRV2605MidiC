@@ -43,7 +43,7 @@ public class MultiI2CWriter implements IWriter {
                 motor = i2c.getDevice(DRV2605_ADDRESS);
                 Thread.sleep(1000);
                 setDeviceToRTPMode();
-                detectMotors();
+                // detectMotors();
                 logger.info("Init complete.");
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
@@ -63,7 +63,8 @@ public class MultiI2CWriter implements IWriter {
         for (int i = 0; i < 8; i++) { // TODO move 8 to constant
             try {
                 writeNext(new Value(0, i, ValueType.START));
-            } catch (WriterException e) {
+                Thread.sleep(1000);
+            } catch (WriterException | InterruptedException e) {
                 logger.info("No motor detected at address " + i);
                 continue;
             }
@@ -96,8 +97,9 @@ public class MultiI2CWriter implements IWriter {
 
         try {
             mux.write(MUX_CONTROL_REGISTER_VALUES[value.getDestination()]); // switch channel to device
+            Thread.sleep(10);
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             logger.log(Level.WARNING, String.format("Motor %d on channel 0x%02X not reachable (ERROR: %s)",
                     value.getDestination(), MUX_CONTROL_REGISTER_VALUES[value.getDestination()], e.getMessage()));
         }
