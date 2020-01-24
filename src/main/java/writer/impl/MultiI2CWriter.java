@@ -4,10 +4,13 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import dto.Value;
+import enumeration.ValueType;
 import exceptions.WriterException;
 import writer.IWriter;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +21,12 @@ public class MultiI2CWriter implements IWriter {
 
     private I2CDevice mux;
     private I2CDevice motor;
+
+    private Set<Integer> detectedMotors;
+
+    public MultiI2CWriter() {
+        this.detectedMotors = new HashSet<>();
+    }
 
     @Override
     public void initialize() throws WriterException {
@@ -34,6 +43,7 @@ public class MultiI2CWriter implements IWriter {
                 motor = i2c.getDevice(DRV2605_ADDRESS);
                 Thread.sleep(1000);
                 setDeviceToRTPMode();
+                detectMotors();
                 logger.info("Init complete.");
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
@@ -45,6 +55,22 @@ public class MultiI2CWriter implements IWriter {
         } else {
             logger.info("Already initialized");
         }
+    }
+
+    private void detectMotors() {
+        logger.info("Detecting motors...");
+
+        for (int i = 0; i < 8; i++) { // TODO move 8 to constant
+            try {
+                writeNext(new Value(0, i, ValueType.START));
+            } catch (WriterException e) {
+                logger.info("No motor detected at address " + i);
+                continue;
+            }
+            this.detectedMotors.add(i);
+        }
+
+        logger.info("Detected motors at " + this.detectedMotors.toString());
     }
 
     public void setDeviceToRTPMode() throws WriterException {
