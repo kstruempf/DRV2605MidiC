@@ -17,8 +17,8 @@ The midi notes velocity is used as the drivers amplitude.
 
 ## Hardware Setup
    * [Raspberry Pi 4 Model B](https://www.raspberrypi.org/)
-   * DRV2605 Haptic Motor Driver
-   * Multiplexer TCA9548A1
+   * [DRV2605 Haptic Motor Driver](http://www.ti.com/lit/ds/symlink/drv2605.pdf)
+   * [Multiplexer TCA9548A1](http://www.ti.com/lit/ds/symlink/tca9548a.pdf)
    * ERM or LRA Vibration Motor
    
    Connecting the Multiplexer to the Raspberry Pi via GPIO (Vin/Ground/SDA/SCL). On the multiplexer use SDA/SCA 0-7 to connect up to 8 DRV2605L. You need one DRV2605 for each motor, since they all have the same adress 0x5A. 5V or 3.3V (both can be used, but has impact on Motor Strength) Connection and Ground from the Raspberry Pi can be in serial and soldered together. 
