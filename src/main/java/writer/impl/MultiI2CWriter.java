@@ -87,8 +87,8 @@ public class MultiI2CWriter implements IWriter {
         logger.info("Setting device to RTP mode");
         if (motor != null) {
             try {
-                motor.write(REGISTER_MODE_ADDRESS, REMOVE_FROM_STANDBY_MODE);
-                Thread.sleep(500);
+                // motor.write(REGISTER_MODE_ADDRESS, REMOVE_FROM_STANDBY_MODE);
+                // Thread.sleep(500);
                 motor.write(REGISTER_MODE_ADDRESS, RTP_MODE);
                 Thread.sleep(500);
             } catch (IOException | InterruptedException e) {
