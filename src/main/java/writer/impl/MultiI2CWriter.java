@@ -40,9 +40,10 @@ public class MultiI2CWriter implements IWriter {
                 mux.write((byte) 0xFF); // setting Control Register to forward to all channels
                 logger.info("Connecting vibration motor");
                 motor = i2c.getDevice(DRV2605_ADDRESS);
-                Thread.sleep(1000);
-                setDeviceToRTPMode();
+                Thread.sleep(500);
                 detectMotors();
+                Thread.sleep(500);
+                setDeviceToRTPMode();
                 logger.info("Init complete.");
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
