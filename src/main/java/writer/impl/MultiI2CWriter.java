@@ -38,12 +38,16 @@ public class MultiI2CWriter implements IWriter {
                 mux = i2c.getDevice(TCA9548A_ADDRESS);
                 Thread.sleep(1000);
                 mux.write((byte) 0xFF); // setting Control Register to forward to all channels
+
                 logger.info("Connecting vibration motor");
                 motor = i2c.getDevice(DRV2605_ADDRESS);
-                Thread.sleep(500);
-                detectMotors();
+
                 Thread.sleep(500);
                 setDeviceToRTPMode();
+
+                Thread.sleep(500);
+                detectMotors();
+
                 logger.info("Init complete.");
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
@@ -62,7 +66,7 @@ public class MultiI2CWriter implements IWriter {
 
         for (int i = 0; i < MUX_CONTROL_REGISTER_VALUES.length; i++) { // TODO move 8 to constant
             try {
-                String.format("Pinging motor %d via channel 0x%02X", i, MUX_CONTROL_REGISTER_VALUES[i]);
+                logger.info(String.format("Pinging motor %d via channel 0x%02X", i, MUX_CONTROL_REGISTER_VALUES[i]));
                 Thread.sleep(500);
                 mux.write(MUX_CONTROL_REGISTER_VALUES[i]); // switch channel to device
                 Thread.sleep(500);
@@ -83,8 +87,11 @@ public class MultiI2CWriter implements IWriter {
         logger.info("Setting device to RTP mode");
         if (motor != null) {
             try {
+                motor.write(REGISTER_MODE_ADDRESS, REMOVE_FROM_STANDBY_MODE);
+                Thread.sleep(500);
                 motor.write(REGISTER_MODE_ADDRESS, RTP_MODE);
-            } catch (IOException e) {
+                Thread.sleep(500);
+            } catch (IOException | InterruptedException e) {
                 throw new WriterException("Failed to set device to RTP Mode", e);
             }
         } else {
