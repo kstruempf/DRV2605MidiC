@@ -60,7 +60,7 @@ public class MultiI2CWriter implements IWriter {
     private void detectMotors() {
         logger.info("Detecting motors...");
 
-        for (int i = 0; i < 10; i++) { // TODO move 8 to constant
+        for (int i = 0; i < MUX_CONTROL_REGISTER_VALUES.length; i++) { // TODO move 8 to constant
             try {
                 logger.info("Pinging motor " + i);
                 Thread.sleep(500);
