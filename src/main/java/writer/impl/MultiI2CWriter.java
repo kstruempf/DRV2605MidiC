@@ -4,7 +4,6 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import dto.Value;
-import enumeration.ValueType;
 import exceptions.WriterException;
 import writer.IWriter;
 
@@ -43,7 +42,7 @@ public class MultiI2CWriter implements IWriter {
                 motor = i2c.getDevice(DRV2605_ADDRESS);
                 Thread.sleep(1000);
                 setDeviceToRTPMode();
-                // detectMotors();
+                detectMotors();
                 logger.info("Init complete.");
             } catch (IOException e) {
                 throw new WriterException("Failed to initialize", e);
@@ -60,11 +59,16 @@ public class MultiI2CWriter implements IWriter {
     private void detectMotors() {
         logger.info("Detecting motors...");
 
-        for (int i = 0; i < 8; i++) { // TODO move 8 to constant
+        for (int i = 0; i < 10; i++) { // TODO move 8 to constant
             try {
-                writeNext(new Value(0, i, ValueType.START));
-                Thread.sleep(1000);
-            } catch (WriterException | InterruptedException e) {
+                logger.info("Pinging motor " + i);
+                Thread.sleep(500);
+                mux.write(MUX_CONTROL_REGISTER_VALUES[i]); // switch channel to device
+                Thread.sleep(500);
+                motor.write(REGISTER_RTP_ADDRESS, (byte) 50);
+                Thread.sleep(500);
+                motor.write(REGISTER_RTP_ADDRESS, (byte) 0);
+            } catch (InterruptedException | IOException e) {
                 logger.info("No motor detected at address " + i);
                 continue;
             }
@@ -97,7 +101,7 @@ public class MultiI2CWriter implements IWriter {
 
         try {
             mux.write(MUX_CONTROL_REGISTER_VALUES[value.getDestination()]); // switch channel to device
-            Thread.sleep(10);
+            Thread.sleep(0);
             motor.write(REGISTER_RTP_ADDRESS, value.getBytes()); // send value to device
         } catch (IOException | InterruptedException e) {
             logger.log(Level.WARNING, String.format("Motor %d on channel 0x%02X not reachable (ERROR: %s)",
