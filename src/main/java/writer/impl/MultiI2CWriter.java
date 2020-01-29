@@ -62,7 +62,7 @@ public class MultiI2CWriter implements IWriter {
 
         for (int i = 0; i < MUX_CONTROL_REGISTER_VALUES.length; i++) { // TODO move 8 to constant
             try {
-                logger.info("Pinging motor " + i);
+                String.format("Pinging motor %d via channel 0x%02X", i, MUX_CONTROL_REGISTER_VALUES[i]);
                 Thread.sleep(500);
                 mux.write(MUX_CONTROL_REGISTER_VALUES[i]); // switch channel to device
                 Thread.sleep(500);
